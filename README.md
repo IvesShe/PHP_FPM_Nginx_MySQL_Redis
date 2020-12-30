@@ -50,7 +50,7 @@ http://downloads.sourceforge.net/project/pcre/pcre/8.37/pcre-8.37.tar.gz
 
 ## 安裝過程，請參考之前的文檔
 
-https://gitlab.com/ivesshe/nginxstudy
+https://github.com/IvesShe/NginxStudy
 
 ## 安裝完要打開80端口
 
@@ -200,6 +200,8 @@ cp etc/php-fpm.conf.default etc/php-fpm.conf
 
 ![image](./images/20201228231942.png)
 ## 執行php-fpm
+
+/usr/local/php/sbin/
 ```bash
 ./sbin/php-fpm
 ```
@@ -215,7 +217,7 @@ ps aux|grep /php
 ```bash
 # php若要移除的話只需要移除/usr/local/php這個資料夾即可
 # 在 /usr/local的目錄時，下指令
-rm -rf php/
+rm -rf php/*
 ```
 
 # 修改nginx設定檔
@@ -257,18 +259,497 @@ http://192.168.160.128/index.php
 
 ![image](./images/20201228233620.png)
 
+# 搭配MYSQL
 
-# 其它資料(暫放未整理)
-## corntab
+## 下載mysql
 
-https://www.google.com/search?q=crontab&rlz=1C1CHBF_zh-TWTW911TW911&oq=crontab&aqs=chrome..69i57j0l3j0i395l4.2320j1j7&sourceid=chrome&ie=UTF-8
+```bash
+ wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
+```
 
-http://linux.vbird.org/linux_basic/0430cron.php
+或直接下載
 
-# 參考文檔
+![image](./images/20201230110135.png)
 
-https://segmentfault.com/a/1190000019361535
+再傳到/usr/local/src內
 
-https://zhuanlan.zhihu.com/p/156936431
+![image](./images/20201230110334.png)
 
-https://blog.gtwang.org/linux/nginx-php-fpm-configuration-optimization/
+## 安装所需要的Yum Repository
+
+```bash
+yum -y install mysql57-community-release-el7-10.noarch.rpm
+```
+
+![image](./images/20201230110032.png)
+
+![image](./images/20201230110053.png)
+
+
+## 開始安裝MYSQL服務器
+
+```bash
+yum -y install mysql-community-server
+```
+
+![image](./images/20201230110846.png)
+
+![image](./images/20201230111112.png)
+
+## 啟動MYSQL服務器
+
+```bash
+systemctl start  mysqld.service
+```
+
+或
+
+```bash
+service mysqld start
+```
+
+查看MYSQL運行狀態
+
+```bash
+systemctl status mysqld.service
+```
+
+![image](./images/20201230111427.png)
+
+## 查看版本
+
+```bash
+mysqladmin --version
+```
+
+![image](./images/20201230114955.png)
+## 查看MYSQL密碼
+
+```bash
+grep "password" /var/log/mysqld.log
+```
+
+![image](./images/20201230111847.png)
+
+## 首次進入MYSQL
+
+```bash
+mysql -uroot -p
+```
+
+![image](./images/20201230112227.png)
+
+修改默認的密碼之後，才能操作數據庫
+
+```bash
+# new password 處填入您自己的新密碼
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'new password';
+```
+
+
+```bash
+ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
+```
+
+設置失敗了
+
+![image](./images/20201230112817.png)
+
+MYSQL有密碼設置的規範，具體是與validate_password_policy的值有關
+
+可以通過以下命令設置
+
+```bash
+set global validate_password_policy=0;
+set global validate_password_length=1;
+```
+
+![image](./images/20201230112559.png)
+
+再設定一次，成功通過了
+
+![image](./images/20201230112634.png)
+
+刷新權限，使新的密碼生效
+
+```bash
+flush privileges;
+```
+
+![image](./images/20201230113311.png)
+
+
+## 設置允許外部ip通過root帳號訪問數據庫
+
+```bash
+use mysql;
+UPDATE user SET `Host` = '%' WHERE `User` = 'root';
+```
+
+![image](./images/20201230113819.png)
+
+## 查看MYSQL運行狀態
+
+```bash
+ps -ef|grep mysql
+```
+
+![image](./images/20201230113943.png)
+
+## 查看所使用的網路端口
+
+```bash
+# 查看當前所有tcp端口
+netstat -ntlp   
+
+# 查看所有3306端口使用情況
+netstat -ntulp | grep 3306
+
+# 查看當前所有tcp端口哪些進程佔用
+netstat -antp
+```
+
+![image](./images/20201230115250.png)
+
+## 開啟防火牆對應端口
+
+```bash
+# 查看開放的端口號
+firewall-cmd --list-all
+
+# 打開80端口(nginx預設端口)
+sudo firewall-cmd --add-port=3306/tcp --permanent
+
+# 重啟防火牆
+firewall-cmd --reload
+```
+
+![image](./images/20201230114826.png)
+
+
+# 安裝Redis
+
+可參考之前的文檔，直接往下拉，到安裝5.0.8版本的部分
+
+https://github.com/IvesShe/RedisStudy
+
+## 移動檔案到/usr/local/src
+
+![image](./images/20201230122405.png)
+
+## 解壓縮
+
+```bash
+tar -xvf redis-5.0.8.tar.gz 
+```
+![image](./images/20201230122352.png)
+
+## 檢查gcc版本
+
+
+```bash
+gcc -v
+```
+![image](./images/20201230122541.png)
+
+若無安裝gcc的話需先安裝
+
+```bash
+yum install gcc-c++
+```
+
+## 安裝redis
+
+在解壓的redis目錄下
+
+```bash
+make
+```
+
+![image](./images/20201230122816.png)
+
+![image](./images/20201230122948.png)
+
+```bash
+make install
+```
+
+![image](./images/20201230123555.png)
+
+其實應該也可以寫一行
+
+```bash
+make && make install
+```
+
+## 設置redis服務後台啟動
+
+![image](./images/20201230132336.png)
+
+設置daemonize yes
+
+![image](./images/20201230132319.png)
+
+
+## 啟動服務
+
+在redis目錄下
+
+```bash
+src/redis-server redis.conf
+```
+
+![image](./images/20201230132551.png)
+
+
+# 用新的configure重新安裝php
+
+## 若要查看舊系統的configure
+
+```bash
+# 可以查看該目錄的原始設定
+php/bin/php-config
+```
+
+## configure或make失敗的話
+
+可以通過以下指令，刪除編譯過的文件，然後重新用 ./configure配置
+```bash
+make clean
+rm -f Makefile
+```
+
+![image](./images/20201230142844.png)
+
+
+另外可透過參數先make，再make install
+
+```bash
+make ZEND_EXTRA_LIBS='-liconv'
+```
+## 移除掉/usr/local/php的所有檔案
+
+在/usr/local/
+```bash
+rm -rf php/*
+```
+
+舊的參考用
+```bash
+./configure --prefix=/usr/local/php \
+--with-gd \
+--enable-gd-native-ttf \
+--enable-gd-jis-conv \
+--enable-fpm
+```
+
+新的版本1
+```bash
+./configure \
+--prefix=/usr/local/php \
+--with-config-file-path=/usr/local/php/etc \
+--with-zlib-dir \
+--with-freetype-dir \
+--enable-mbstring \
+--with-libxml-dir=/usr \
+--enable-xmlreader \
+--enable-xmlwriter \
+--enable-soap \
+--enable-calendar \
+--with-curl \
+--with-zlib \
+--with-gd \
+--with-pdo-sqlite \
+--with-pdo-mysql \
+--with-mysqli \
+--with-mysql-sock \
+--enable-mysqlnd \
+--disable-rpath \
+--enable-inline-optimization \
+--with-bz2 \
+--with-zlib \
+--enable-sockets \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-pcntl \
+--enable-mbregex \
+--enable-exif \
+--enable-bcmath \
+--with-mhash \
+--enable-zip \
+--with-pcre-regex \
+```
+
+新的版本2
+```bash
+./configure --prefix=/usr/local/php \
+--with-config-file-path=/usr/local/php/etc \
+--with-config-file-scan-dir=/usr/local/php/etc/conf.d \
+--with-curl \
+--with-libedit \
+--with-openssl \
+--with-zlib \
+--disable-short-tags \
+--without-sqlite3 \
+--without-pdo-sqlite \
+--without-cdb \
+--without-pear \
+--enable-bcmath \
+--enable-pcntl \
+--enable-sockets \
+--enable-zip \
+--enable-fpm \
+--enable-ftp \
+--enable-mbstring \
+--enable-mysqlnd \
+--enable-shmop \
+--enable-sysvsem \
+--enable-soap \
+--with-xmlrpc \
+--with-mysqli=mysqlnd \
+--with-pdo-mysql=mysqlnd \
+--with-gd \
+--with-png-dir \
+--with-jpeg-dir \
+--with-freetype-dir \
+--enable-inline-optimization \
+--with-fpm-user=www \
+--with-fpm-group=www \
+```
+
+![image](./images/20201230133956.png)
+
+報錯，補安裝相關依賴
+
+![image](./images/20201230134016.png)
+
+```bash
+yum install bzip2-devel
+
+```
+![image](./images/20201230134157.png)
+
+報錯，補安裝相關依賴
+
+![image](./images/20201230134313.png)
+
+```bash
+yum install curl curl-devel
+```
+
+![image](./images/20201230134407.png)
+
+報錯，補安裝相關依賴
+
+![image](./images/20201230134637.png)
+
+```bash
+yum install freetype-devel
+```
+
+![image](./images/20201230134800.png)
+
+報錯，補安裝相關依賴
+
+![image](./images/20201230134936.png)
+
+```bash
+yum install mysql-devel
+```
+
+![image](./images/20201230140854.png)
+
+其它報錯安裝依賴參考
+```bash
+yum -y install libjpeg-devel
+```
+
+## configure: error: Please reinstall libedit - I cannot find readline.h 報錯特殊解法
+
+```bash
+# 先試
+yum install -y readline-devel
+
+# 沒用的話直接捉源碼 可從網頁輸入捉去
+wget http://thrysoee.dk/editline/libedit-20170329-3.1.tar.gz
+
+# 在/usr/local/src解壓
+tar -xvf libedit-20170329-3.1.tar.gz
+
+# 編譯
+./configure
+
+# 安裝
+make && make install
+```
+
+![image](./images/20201230153124.png)
+
+## 註：新的版本一直試不成功，最後改用 新的版本2 先安裝通過了
+## 終於configure成功了
+
+![image](./images/20201230141342.png)
+
+## 安裝
+
+```bash
+make && make install
+```
+
+![image](./images/20201230141550.png)
+
+![image](./images/20201230143828.png)
+
+
+## 拷貝php設定檔
+在/usr/local/php(configure設定的安裝的目錄)的目錄下
+```bash
+cp /usr/local/src/php-5.3.27/php.ini-development ./lib/php.ini
+```
+
+![image](./images/20201228231919.png)
+
+## 拷貝php-fpm設定檔
+```bash
+# 在./configure時有加--enable-fpm，才會有php-fpm的檔案
+cp etc/php-fpm.conf.default etc/php-fpm.conf
+```
+
+![image](./images/20201228231942.png)
+## 執行php-fpm
+
+要記得先新增user
+```bash
+adduser www
+```
+
+/usr/local/php/sbin/
+```bash
+./sbin/php-fpm
+```
+
+![image](./images/20201230144110.png)
+
+## 查看進程
+```bash
+ps aux|grep /php
+```
+
+## 新版測試畫面
+
+![image](./images/20201230144423.png)
+
+# 安裝Composer
+
+參考之前的文檔
+
+https://github.com/IvesShe/PHP_Linux_Study
+
+
+# Nginx第三方模塊編譯
+
+查看nginx編譯設定
+
+```bash
+/usr/local/nginx/sbin/nginx -V
+```
