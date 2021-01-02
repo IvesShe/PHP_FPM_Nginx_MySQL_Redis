@@ -613,8 +613,6 @@ rm -rf php/*
 --with-jpeg-dir \
 --with-freetype-dir \
 --enable-inline-optimization \
---with-fpm-user=www \
---with-fpm-group=www \
 ```
 
 ![image](./images/20201230133956.png)
