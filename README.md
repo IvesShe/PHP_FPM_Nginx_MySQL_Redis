@@ -470,30 +470,32 @@ make
 
 ![image](./images/20201230122948.png)
 
+## 指定安裝目錄
+
+會用預設目錄安裝
 ```bash
 make install
 ```
 
-![image](./images/20201230123555.png)
-
-其實應該也可以寫一行
-
+重新下載及安裝，安裝時下參數，指定安裝資料夾
 ```bash
-make && make install
+make install PREFIX=/usr/local/server/redis
 ```
+
+![image](./images/20201230123555.png)
 
 ## 設置redis服務後台啟動
 
 ![image](./images/20201230132336.png)
 
-設置daemonize yes
+設置daemonize yes(先本的conf可以先備份起來)
 
 ![image](./images/20201230132319.png)
 
 
 ## 啟動服務
 
-在redis目錄下
+在redis(/usr/local/src/redis-5.0.8/帶版號的那個)目錄下
 
 ```bash
 src/redis-server redis.conf
