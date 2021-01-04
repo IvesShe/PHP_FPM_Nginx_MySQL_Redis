@@ -582,41 +582,6 @@ rm -rf php/*
 --with-pcre-regex \
 ```
 
-新的版本2
-```bash
-./configure --prefix=/usr/local/php \
---with-config-file-path=/usr/local/php/etc \
---with-config-file-scan-dir=/usr/local/php/etc/conf.d \
---with-curl \
---with-libedit \
---with-openssl \
---with-zlib \
---disable-short-tags \
---without-sqlite3 \
---without-pdo-sqlite \
---without-cdb \
---without-pear \
---enable-bcmath \
---enable-pcntl \
---enable-sockets \
---enable-zip \
---enable-fpm \
---enable-ftp \
---enable-mbstring \
---enable-mysqlnd \
---enable-shmop \
---enable-sysvsem \
---enable-soap \
---with-xmlrpc \
---with-mysqli=mysqlnd \
---with-pdo-mysql=mysqlnd \
---with-gd \
---with-png-dir \
---with-jpeg-dir \
---with-freetype-dir \
---enable-inline-optimization \
-```
-
 ![image](./images/20201230133956.png)
 
 報錯，補安裝相關依賴
