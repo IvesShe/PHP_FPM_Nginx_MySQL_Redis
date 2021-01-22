@@ -106,6 +106,7 @@ pkill -9 nginx
 # PHP下載
 
 ## 安裝版本5.3.27
+### 下面文檔的部分變7.2.34是因為更換過版本，但都通用，只需更改對應的版號資料夾
 
 https://museum.php.net/php5/
 
@@ -115,7 +116,13 @@ https://museum.php.net/php5/
 
 https://www.php.net/distributions/php-7.2.34.tar.gz
 
-## 在/usr/local新增php資料夾
+## 新增php資料夾
+
+在/usr/local 
+
+or 
+
+/usr/local/webserver 
 
 ```bash
 mkdir php
@@ -134,9 +141,18 @@ tar -xvf php-5.3.27.tar.gz
 ![image](./images/20201228230504.png)
 
 ## 進入/usr/local/php-5.3.2資料夾
+
+依自己的版本更改名稱
+
 ```bash
 /usr/local/php-5.3.2    # -> 進行設定、組譯並安裝
+
 /usr/local/php          # -> 最後安裝的目錄
+
+or
+
+/usr/local/webserver/php          # -> 最後安裝的目錄
+```
 ```
 
 ## 設定要編譯的php相關套件
@@ -193,6 +209,10 @@ make && make install
 
 ## 拷貝php設定檔
 在/usr/local/php(configure設定的安裝的目錄)的目錄下
+
+or 
+
+/usr/local/webserver/php
 ```bash
 # cp /usr/local/src/php-5.3.27/php.ini-development ./lib/php.ini
 # cp /usr/local/src/php-7.2.18/php.ini-development ./lib/php.ini
