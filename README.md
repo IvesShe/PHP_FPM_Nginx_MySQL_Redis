@@ -238,7 +238,7 @@ cp /usr/local/webserver/php/etc/php-fpm.conf.default /usr/local/webserver/php/et
 
 ![image](./images/20201228231942.png)
 
-# PHP7.2.18(適用php7以上)不同處(多拷貝2個檔案)
+# PHP7.2.18(適用php7以上)不同處
 ```bash
 #cp php-fpm.conf.default /usr/local/webserver/php/etc/php-fpm.conf
 

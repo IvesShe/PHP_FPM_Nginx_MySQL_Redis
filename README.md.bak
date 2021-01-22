@@ -209,6 +209,10 @@ make && make install
 
 ## 拷貝php設定檔
 在/usr/local/php(configure設定的安裝的目錄)的目錄下
+
+or 
+
+/usr/local/webserver/php
 ```bash
 # cp /usr/local/src/php-5.3.27/php.ini-development ./lib/php.ini
 # cp /usr/local/src/php-7.2.18/php.ini-development ./lib/php.ini
