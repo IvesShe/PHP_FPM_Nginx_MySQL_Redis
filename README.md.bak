@@ -484,7 +484,6 @@ firewall-cmd --reload
 
 https://github.com/IvesShe/RedisStudy
 
-
 ## 移動檔案到/usr/local/src
 
 ![image](./images/20201230122405.png)
@@ -539,7 +538,6 @@ make install PREFIX=/usr/local/webserver/redis
 ```
 
 ![image](./images/20201230123555.png)
-
 
 ## 設置redis服務後台啟動
 
